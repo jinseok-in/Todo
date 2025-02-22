@@ -1,10 +1,8 @@
 package com.backend.backend.todo;
 
 import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -55,4 +53,12 @@ public class TodoControllerTest {
     // @Test saveFailTest() {
 
     // }
+
+    // TODO : PUT (update) 성공 케이스
+
+    // TODO : PUT (update) 실패 케이스
+
+    // TODO : DELETE (delete) 성공 케이스
+
+    // TODO : DELETE (delete) 실패 케이스
 }

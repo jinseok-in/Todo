@@ -1,6 +1,7 @@
 package com.backend.backend.todo;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,10 @@ public class TodoService {
     //     this.todoRepository = todoRepository;
     // }
 
+    public Optional<Todo> findById(Long id) {
+        return todoRepository.findById(id);
+    }
+
     // read todo (GET)
     public List<Todo> getAllTodo() {
         return todoRepository.findAll();
@@ -27,6 +32,10 @@ public class TodoService {
     }
 
     // update todo (PUT)
+    // TodoDto를 매개변수로 받지 않고 Todo를 받아오기 떄문에 type을 Long이 아닌 Todo로 해야함.
+    public Todo update(Long id, Todo todo) {
+        return todoRepository.save(todo);
+    }
 
     // delete todo (DELETE)
 

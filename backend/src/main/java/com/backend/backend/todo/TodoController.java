@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,14 +35,25 @@ public class TodoController {
 
     @PostMapping("/save")
     public Long save(@RequestBody TodoDto requestDto) {
+        // TodoDto 형식
         return todoService.save(requestDto);
     }
 
     @PutMapping("/{id}")
-    public String putMethodName(@PathVariable String id, @RequestBody String entity) {
-        //TODO: process PUT request
+    public ResponseEntity<Todo> updateTodo(@PathVariable("id") Long id, @RequestBody TodoDto todoDto) {
         
-        return entity;
+        Todo existingTodo = todoService.findById(id)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "데이터를 찾을 수 없습니다."));
+        
+        existingTodo = existingTodo.toBuilder()
+                    .content(todoDto.getContent())
+                    .description(todoDto.getDescription())
+                    .isChecked(todoDto.getIsChecked())
+                    .build();
+        
+        Todo updateTodo = todoService.update(id, existingTodo);
+
+        return ResponseEntity.ok(updateTodo);
     }
     
 }
