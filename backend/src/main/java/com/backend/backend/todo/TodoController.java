@@ -1,13 +1,16 @@
 package com.backend.backend.todo;
 
 import java.util.List;
-import org.slf4j.Logger;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 
 @RestController
@@ -16,8 +19,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class TodoController {
 
     private final TodoService todoService;
-
-    private static final Logger logger = LoggerFactory.getLogger(TodoController.class);
     
     public TodoController(TodoService todoService) {
         this.todoService = todoService;
@@ -26,9 +27,19 @@ public class TodoController {
     // Mapping request Get Post
     @GetMapping
     public List<Todo> getAllTodo() {
-        logger.info("GET /api/todos check");
-        System.out.println("Get /api/todos check");
         return todoService.getAllTodo();    
+    }
+
+    @PostMapping("/save")
+    public Long save(@RequestBody TodoDto requestDto) {
+        return todoService.save(requestDto);
+    }
+
+    @PutMapping("/{id}")
+    public String putMethodName(@PathVariable String id, @RequestBody String entity) {
+        //TODO: process PUT request
+        
+        return entity;
     }
     
 }

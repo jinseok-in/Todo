@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.buildship.ui.wizard.project.import">
-		<item key="project_location" value="C:\Project\clush\Todo"/>
+		<item key="project_location" value="C:\Project\project_hsm\backend"/>
 		<item key="gradle_distribution" value="GRADLE_DISTRIBUTION(VERSION(8.13-rc-2))"/>
 		<section name="ProjectImportWizard.dialogBounds">
 			<item key="DIALOG_X_ORIGIN" value="941"/>

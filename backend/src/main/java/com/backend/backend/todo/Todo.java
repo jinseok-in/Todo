@@ -5,20 +5,27 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
-@Entity
 @Getter
-@Setter
+@NoArgsConstructor(force = true)
+@AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "todo")
 public class Todo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long todo_id;
+    private Long todoId;
+
+    private String content;
+    private String description;
 
     @Column
-    private String title;
-
-    
+    private Boolean isChecked;
 }
