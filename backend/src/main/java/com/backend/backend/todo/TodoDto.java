@@ -1,10 +1,11 @@
 package com.backend.backend.todo;
 
+import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,20 +19,23 @@ public class TodoDto {
     private String description;
     private Boolean isChecked;
 
-
-    @Builder
-    public TodoDto(String content, String description, Boolean isChecked) {
+    // Todo 마감 시간
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+    private LocalDateTime deadline;
+    
+    public TodoDto(String content, String description, Boolean isChecked, LocalDateTime deadline) {
         this.content = content;
         this.description = description;
         this.isChecked = isChecked;
+        this.deadline = deadline;
     }
 
     public Todo toEntity() {
-        return Todo.builder()
-            .todoId(null)
-            .content(content)
-            .description(description)
-            .isChecked(isChecked)
-            .build();
+        Todo todo = new Todo();
+        todo.setContent(content);
+        todo.setDescription(description);
+        todo.setIsChecked(isChecked);
+        todo.setDeadline(deadline);
+        return todo;
     }
 }

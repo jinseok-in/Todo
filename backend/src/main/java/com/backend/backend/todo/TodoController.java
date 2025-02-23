@@ -52,11 +52,9 @@ public class TodoController {
         Todo existingTodo = todoService.findById(id)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "데이터를 찾을 수 없습니다."));
         
-        existingTodo = existingTodo.toBuilder()
-                    .content(todoDto.getContent())
-                    .description(todoDto.getDescription())
-                    .isChecked(todoDto.getIsChecked())
-                    .build();
+        existingTodo.setContent(todoDto.getContent());
+        existingTodo.setDescription(todoDto.getDescription());
+        existingTodo.setIsChecked(todoDto.getIsChecked());
         
         Todo updateTodo = todoService.update(id, existingTodo);
 
