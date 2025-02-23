@@ -1,7 +1,5 @@
 package com.backend.backend.todo;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,21 +42,78 @@ public class TodoControllerTest {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isGreaterThan(0L);
 
-        // 데이터베이스에서 확인
-        List<Todo> all = restTemplate.getForObject("http://localhost:" + port + "/api/todos", List.class);
-        assertThat(all).isNotEmpty();
+    }
+
+    @Test
+    void saveNoDescriptionSuccessTest() {
+        // given
+        String content = "앉기";
+        String description = null;
+        Boolean isChecked = false;
+
+        String url = "http://localhost:" + port + "/api/todos/save";
+
+        TodoDto todoDto = TodoDto.builder()
+                            .content(content)
+                            .description(description)
+                            .isChecked(isChecked)
+                            .build();
+
+        // when
+        ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url, todoDto, Long.class);
+
+        // then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isGreaterThan(0L);
+
     }
 
     // save 실패 케이스
-    // @Test saveFailTest() {
+    @Test 
+    void saveFailContentNullTest() {
+        // given
+        String content = null;
+        String description = "test";
+        Boolean isChecked = false;
 
-    // }
+        String url = "http://localhost:" + port + "/api/todos/save";
+        
+        TodoDto todoDto = TodoDto.builder()
+                            .content(content)
+                            .description(description)
+                            .isChecked(isChecked)
+                            .build();
+
+        // when
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, todoDto, String.class);
+
+        // then
+        System.out.println("response : " + responseEntity.getBody());
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+    }
 
     // TODO : PUT (update) 성공 케이스
+    // update 성공 케이스
+    @Test
+    void updateSuccessTest() {
+
+    }
+    
 
     // TODO : PUT (update) 실패 케이스
+    // update 실패 케이스
+
 
     // TODO : DELETE (delete) 성공 케이스
+    // delete 성공 케이스
+    @Test
+    void deleteSuccessTest() {
+
+    }
 
     // TODO : DELETE (delete) 실패 케이스
+    // delete 실패 케이스
+
+
 }

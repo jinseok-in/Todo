@@ -23,9 +23,11 @@ public class Todo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long todoId;
 
+    @Column(nullable = false)
     private String content;
+
     private String description;
 
-    @Column
     private Boolean isChecked;
+
 }
