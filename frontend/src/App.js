@@ -150,20 +150,20 @@ function App({ todo, updateTodo, updateIsChecked, deleteTodo }) {
       <table border="1" fontWeight="bold">
         <thead>
           <tr>
-            <th>index</th>
-            <th>content</th>
-            <th>description</th>
-            <th>createTime</th>
-            <th>deadline</th>
-            <th>Check</th>
+            <th>번호</th>
+            <th>할 일</th>
+            <th>설명</th>
+            <th>생성 시간</th>
+            <th>마감 기한</th>
+            <th>완료 여부</th>
           </tr>
         </thead>
         <tbody>
           {todos.map((todo, index) => (
           <tr key={todo.todoId} style={{
-                  backgroundColor : todo.isChecked ? "green" : 
+                  backgroundColor : todo.isChecked ? "skyblue" : 
                                     new Date(todo.deadline.replace(" ", "T")) > time ? "transparent" : 
-                                    "red", 
+                                    "pink", 
                   textAlign : "center"}}>
             {editId === todo.todoId ? (
               <>
@@ -206,9 +206,9 @@ function App({ todo, updateTodo, updateIsChecked, deleteTodo }) {
         <table border="1">
           <thead>
             <tr>
-              <th>content</th>
-              <th>description</th>
-              <th>deadline</th>
+              <th>할 일</th>
+              <th>설명</th>
+              <th>마감 기한</th>
             </tr>
           </thead>
           <tbody>
