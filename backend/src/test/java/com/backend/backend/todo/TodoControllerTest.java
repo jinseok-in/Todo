@@ -9,13 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TodoControllerTest {
@@ -95,7 +94,6 @@ public class TodoControllerTest {
 
     }
 
-    // TODO : PUT (update) 성공 케이스
     // update 성공 케이스
     @Test
     void updateSuccessTest() {
@@ -112,7 +110,7 @@ public class TodoControllerTest {
             // then
             Todo data = todoList.get(0);
         
-            data.setContent("Test Content");
+            data.setContent(content);
             data.setDescription(description);
             data.setIsChecked(isChecked);
             data.setDeadline(deadline);
@@ -120,7 +118,7 @@ public class TodoControllerTest {
             Todo update = todoService.update(data.getTodoId(), data);
         
             assertThat(update).isNotNull();
-            assertThat(update.getContent()).isEqualTo("Test Content");
+            assertThat(update.getContent()).isEqualTo(content);
             assertThat(update.getDescription()).isEqualTo(description);
             assertThat(update.getIsChecked()).isEqualTo(isChecked);
             assertThat(update.getDeadline()).isEqualTo(deadline);
@@ -153,12 +151,11 @@ public class TodoControllerTest {
     }
     
 
-    // TODO : PUT (update) 실패 케이스
     // update 실패 케이스
     @Test
     void updateFailTest() {
         // given
-        String content = ""; // 빈 값으로 설정 (업데이트 실패 유도)
+        String content = "";
         String description = "Test Update Description";
         Boolean isChecked = false;
         LocalDateTime deadline = LocalDateTime.parse("2025-03-01 14:30", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
@@ -167,48 +164,42 @@ public class TodoControllerTest {
         List<Todo> todoList = todoService.getAllTodo();
     
         if (!todoList.isEmpty()) {
-            // 데이터가 존재하면 첫 번째 데이터를 가져와 업데이트 수행
             Todo data = todoList.get(0);
     
-            data.setContent(content); // 실패 조건: content가 빈 문자열
+            data.setContent(content);
             data.setDescription(description);
             data.setIsChecked(isChecked);
             data.setDeadline(deadline);
-    
-            try {
-                Todo update = todoService.update(data.getTodoId(), data);
-                fail("업데이트가 실패해야 하지만 성공했습니다.");
-            } catch (Exception e) {
-                System.out.println("업데이트 실패 확인: " + e.getMessage());
-                assertThat(e.getMessage()).contains("할 일의 내용은 필수 항목입니다.");
-            }
+
+            assertThatThrownBy(() -> todoService.update(data.getTodoId(), data))
+            .isInstanceOf(RuntimeException.class)
+            .hasMessageContaining("할 일의 내용은 필수 항목입니다.");
+        
         } else {
             // 데이터가 없으면 새 데이터 추가 후 업데이트 실패 시도
             TodoDto newTodoDto = new TodoDto("Valid Content", "New Description", false,
                     LocalDateTime.parse("2025-03-01 14:30", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-    
+        
             Long newTodoId = todoService.save(newTodoDto);
-    
+        
+            // 저장된 데이터가 정상적으로 존재하는지 확인
             Todo newTodo = todoService.findById(newTodoId)
                     .orElseThrow(() -> new RuntimeException("새로운 데이터를 찾을 수 없습니다."));
-    
+        
             // 실패할 데이터를 설정 (content를 빈 문자열로 변경)
-            newTodo.setContent(content);
-            newTodo.setDescription(description);
-            newTodo.setIsChecked(isChecked);
-            newTodo.setDeadline(deadline);
-    
-            try {
-                Todo update = todoService.update(newTodo.getTodoId(), newTodo);
-                fail("업데이트가 실패해야 하지만 성공했습니다.");
-            } catch (Exception e) {
-                System.out.println("업데이트 실패 확인: " + e.getMessage());
-                assertThat(e.getMessage()).contains("할 일의 내용은 필수 항목입니다.");
-            }
+            newTodo.setContent("");
+            newTodo.setDescription("Test Update Description");
+            newTodo.setIsChecked(false);
+            newTodo.setDeadline(LocalDateTime.parse("2025-03-01 14:30", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        
+            // then (예외 발생 검증)
+            assertThatThrownBy(() -> todoService.update(newTodo.getTodoId(), newTodo))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("할 일의 내용은 필수 항목입니다.");
         }
+        
     }
 
-    // TODO : DELETE (delete) 성공 케이스
     // delete 성공 케이스
     @Test
     void deleteSuccessTest() {
@@ -245,7 +236,6 @@ public class TodoControllerTest {
         }
     }
 
-    // TODO : DELETE (delete) 실패 케이스
     // delete 실패 케이스
     @Test
     void deleteFailTest() {

@@ -59,6 +59,9 @@ function App({ todo, updateTodo, updateIsChecked, deleteTodo }) {
     } else if (!deadline) {
       alert("마감 시간은 필수 항목입니다.");
       return;
+    } else if (new Date(deadline) < time) {
+      alert("마감 기한은 현재 날짜보다 이후로만 설정할 수 있습니다.");
+      return;
     }
     const deadlineRepl = null;
     try {
@@ -93,6 +96,9 @@ function App({ todo, updateTodo, updateIsChecked, deleteTodo }) {
       return;
     } else if (!editDeadline) {
       alert("마감 시간은 필수 항목입니다.");
+      return;
+    } else if (new Date(editDeadline) < time) {
+      alert("마감 기한은 현재 날짜보다 이후로만 설정할 수 있습니다.");
       return;
     }
 
