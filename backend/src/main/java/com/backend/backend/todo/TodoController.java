@@ -8,12 +8,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.backend.backend.todo.TodoDto.IsCheckedUpdate;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -52,9 +55,13 @@ public class TodoController {
         Todo existingTodo = todoService.findById(id)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "데이터를 찾을 수 없습니다."));
         
+        if (todoDto.getContent() == null || todoDto.getContent().trim().isEmpty()) {
+            throw new RuntimeException("할 일의 내용은 필수 항목입니다.");
+        }
         existingTodo.setContent(todoDto.getContent());
         existingTodo.setDescription(todoDto.getDescription());
         existingTodo.setIsChecked(todoDto.getIsChecked());
+        existingTodo.setDeadline(todoDto.getDeadline());
         
         Todo updateTodo = todoService.update(id, existingTodo);
 
@@ -72,4 +79,16 @@ public class TodoController {
         return ResponseEntity.noContent().build();
     }
     
+    @PatchMapping("check/{id}")
+    public ResponseEntity<String> updateIsChecked(@PathVariable("id") Long id, @RequestBody IsCheckedUpdate isCheckedUpdate) {
+
+        Todo todo = todoService.findById(id)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "데이트를 찾을 수 없습니다."));
+        
+        todo.setIsChecked(isCheckedUpdate.isChecked());
+
+        todoService.checkUpdate(todo.getTodoId(), todo.getIsChecked());
+
+        return ResponseEntity.ok("완료 처리 하였습니다.");
+    }
 }

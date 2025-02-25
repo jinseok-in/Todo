@@ -43,6 +43,7 @@ public class Todo {
     private LocalDateTime createTime = LocalDateTime.now();
 
     // Todo 마감 시간
+    @Column(nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime deadline;
       

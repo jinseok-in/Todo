@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -23,7 +24,7 @@ public class TodoService {
 
     // read todo (GET)
     public List<Todo> getAllTodo() {
-        return todoRepository.findAll();
+        return todoRepository.findAllByOrderByDeadlineAsc();
     }
 
     // save todo (POST)
@@ -40,5 +41,11 @@ public class TodoService {
     // delete todo (DELETE)
     public void delete(Long id) {
         todoRepository.deleteById(id);
+    }
+
+    // check update
+    @Transactional
+    public void checkUpdate(Long id, Boolean isChecked) {
+        todoRepository.updateIsChecked(id, isChecked);
     }
 }

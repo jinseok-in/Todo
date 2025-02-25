@@ -11,7 +11,6 @@ public class CorsConfig implements WebMvcConfigurer {
         registry.addMapping("/api/**")  // 모든 API에 CORS 허용
                 .allowedOrigins("http://localhost:3000")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
                 .allowCredentials(true);
     }
 }
